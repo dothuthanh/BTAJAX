@@ -18,6 +18,7 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -40,6 +41,7 @@ import java.util.Properties;
 @ComponentScan("ajax.controller")
 @EnableJpaRepositories("ajax.repository")
 @EnableAspectJAutoProxy
+@EnableTransactionManagement
 public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
     private ApplicationContext applicationContext;
 
@@ -91,15 +93,15 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
     Environment env;
 
     // Cấu hình để sử dụng các file nguồn tĩnh (css, image, js..)
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
-        String fileUpload = env.getProperty("file_upload").toString();
-
-        // Image resource.
-        registry.addResourceHandler("/i/**") //
-                .addResourceLocations("file:" + fileUpload);
-    }
+//    @Override
+//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//
+//        String fileUpload = env.getProperty("file_upload").toString();
+//
+//        // Image resource.
+//        registry.addResourceHandler("/i/**") //
+//                .addResourceLocations("file:" + fileUpload);
+//    }
 
     @Override
     public void configureDefaultServletHandling(
@@ -120,7 +122,7 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
-        em.setPackagesToScan(new String[]{"com.codegym.c0620k1.model"});
+        em.setPackagesToScan(new String[]{"ajax.model"});
 
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
@@ -132,7 +134,7 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
     public DataSource dataSource(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3308/c0620k1");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/c0620k1?useSSL=false");
         dataSource.setUsername( "root" );
         dataSource.setPassword( "123123" );
         return dataSource;
